@@ -13,10 +13,10 @@ function Header() {
           <div className="row align-items-center">
             <div className="col-md mr-0 pr-md-0 mb-3 mb-md-0">
               <input
-                name="username"
+                name="email"
                 className="form-control form-control-sm input-dark"
                 type="text"
-                placeholder="Username"
+                placeholder="email or mobile"
                 autoComplete="off"
               />
             </div>

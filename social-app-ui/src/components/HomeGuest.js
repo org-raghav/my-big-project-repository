@@ -3,20 +3,20 @@ import React from "react";
 import Page from "./Page";
 
 function HomeGuest() {
-
- async function  handleSubmit(e){
+  async function handleSubmit(e) {
     e.preventDefault();
     //alert("handle submit");
-   try{
-   await axios.post('http://localhost:8080/users/sign-up', {
-      username:"test", 
-      email:"test@gmail.com",
-      password:"123"
-    });
-    console.log("User is successfully created.");
-   }catch(e){
-    console.log("There is an error ! Something went wrong...");
-   }
+    try {
+      await axios.post("http://localhost:8080/users/sign-up", {
+        firstName: "raghav",
+        lastName: "Tiger",
+        email: "test@gmail.com",
+        password: "123",
+      });
+      console.log("User is successfully created.");
+    } catch (e) {
+      console.log("There is an error ! Something went wrong...");
+    }
   }
 
   return (
@@ -34,15 +34,28 @@ function HomeGuest() {
         <div className="col-lg-5 pl-lg-5 pb-3 py-lg-5">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="username-register" className="text-muted mb-1">
-                <small>Username</small>
+              <label htmlFor="firstName" className="text-muted mb-1">
+                <small>First Name</small>
               </label>
               <input
-                id="username-register"
-                name="username"
+                id="firstName"
+                name="firstName"
                 className="form-control"
                 type="text"
-                placeholder="Pick a username"
+                placeholder="Enter Your first name"
+                autoComplete="off"
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="lastName" className="text-muted mb-1">
+                <small>LastName</small>
+              </label>
+              <input
+                id="lastName"
+                name="lastName"
+                className="form-control"
+                type="text"
+                placeholder="Enter your last name"
                 autoComplete="off"
               />
             </div>
