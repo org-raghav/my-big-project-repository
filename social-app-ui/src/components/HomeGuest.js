@@ -1,17 +1,21 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import Page from "./Page";
 
 function HomeGuest() {
+
+  const[firstName, setFirstName] = useState();
+  const[lastName, setLastName] = useState();
+  const[email, setEmail] = useState();
+  const[password, setPassword] = useState();
+
+  
   async function handleSubmit(e) {
     e.preventDefault();
     //alert("handle submit");
     try {
       await axios.post("http://localhost:8080/users/sign-up", {
-        firstName: "raghav",
-        lastName: "Tiger",
-        email: "test@gmail.com",
-        password: "123",
+       firstName, lastName, email, password
       });
       console.log("User is successfully created.");
     } catch (e) {
@@ -42,6 +46,7 @@ function HomeGuest() {
                 name="firstName"
                 className="form-control"
                 type="text"
+                onChange={e => setFirstName(e.target.value)}
                 placeholder="Enter Your first name"
                 autoComplete="off"
               />
@@ -55,6 +60,7 @@ function HomeGuest() {
                 name="lastName"
                 className="form-control"
                 type="text"
+                onChange={e => setLastName(e.target.value)}
                 placeholder="Enter your last name"
                 autoComplete="off"
               />
@@ -68,6 +74,7 @@ function HomeGuest() {
                 name="email"
                 className="form-control"
                 type="text"
+                onChange={e => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 autoComplete="off"
               />
@@ -81,6 +88,7 @@ function HomeGuest() {
                 name="password"
                 className="form-control"
                 type="password"
+                onChange={e => setPassword(e.target.value)}
                 placeholder="Create a password"
               />
             </div>
