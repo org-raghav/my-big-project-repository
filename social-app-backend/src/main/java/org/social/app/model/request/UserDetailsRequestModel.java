@@ -15,7 +15,7 @@ public class UserDetailsRequestModel {
 	@NotEmpty(message = "Email must not be empty")
 	private String email;
 
-	@Size(min = 1, max = 32, message = "password name must be between 1 to 50 character long only!")
+	@Size(min = 3, max = 32, message = "password name must be between 1 to 50 character long only!")
 	private String password;
 
 	public String getFirstName() {

@@ -38,7 +38,8 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(UserAlreadyExistsException.class)
 	public ResponseEntity<ErrorMessage> handleUserAlreadyExistsException(UserAlreadyExistsException ex, WebRequest request){
 		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getLocalizedMessage());
-		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.ALREADY_REPORTED);
+		//return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.ALREADY_REPORTED);
+		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.NOT_ACCEPTABLE);
 	}
 	
 	@ExceptionHandler(InvalidTokenException.class)
