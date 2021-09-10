@@ -56,7 +56,7 @@ public class UserController {
 		return "get user is called!";
 	}
 
-	@PutMapping(path = "/update-user")
+	@PutMapping(path = "/update-user/{userId}")
 	public String updateUser() {
 		return "update user is called!";
 	}
@@ -65,4 +65,5 @@ public class UserController {
 	public String deleteUser() {
 		return "delete user is called!";
 	}
+	
 }
