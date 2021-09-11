@@ -17,6 +17,14 @@ export default function HeaderLoggedOut(props) {
 
       if (response.status === 200) {
         console.log("you are successfully logged in !");
+        console.log(response.headers['authorization']);
+        console.log(response.headers['userid']);
+        //setting(saving) LoggedIn info(useState) in Browser localStorage
+        //so that useState does not re-initialized and remeber the state. 
+        localStorage.setItem("userId", response.headers['userid']);
+        localStorage.setItem("Authorization", response.headers['authorization']);
+        localStorage.setItem("avatar", "My-Avatar");
+        
         //In LoggedOut component we are setting  here
         //If status code is 200 then  setLoggedIn  is  true
         //Means now The user is successfully loggedIn

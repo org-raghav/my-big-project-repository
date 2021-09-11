@@ -5,6 +5,12 @@ export default function HeaderLoggedIn(props) {
   //so that we can see our LoggedOut component again
   //because it is the logic implemented by ternary operator
   //defined in this parent component Header.js
+  function handleLogOut(){
+    props.setLoggedIn(false);
+    localStorage.removeItem('userId');
+    localStorage.removeItem('Authorization');
+    localStorage.removeItem('avatar');
+  }
     return (
         <div className="flex-row my-3 my-md-0">
           <a href="#" className="text-white mr-2 header-search-icon">
@@ -20,7 +26,7 @@ export default function HeaderLoggedIn(props) {
           <a className="btn btn-sm btn-success mr-2" href="/create-post">
             Create Post
           </a>
-          <button onClick={() => props.setLoggedIn(false)} className="btn btn-sm btn-secondary">
+          <button onClick={handleLogOut} className="btn btn-sm btn-secondary">
             Sign Out
           </button>
         </div>
