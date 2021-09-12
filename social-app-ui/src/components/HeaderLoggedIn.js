@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 export default function HeaderLoggedIn(props) {
   //here we are setting setLoggedIn function to false
@@ -23,9 +24,9 @@ export default function HeaderLoggedIn(props) {
           <a href="#" className="mr-2">
             <img className="small-header-avatar" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" />
           </a>
-          <a className="btn btn-sm btn-success mr-2" href="/create-post">
+          <Link to="/create-post" className="btn btn-sm btn-success mr-2">
             Create Post
-          </a>
+          </Link>
           <button onClick={handleLogOut} className="btn btn-sm btn-secondary">
             Sign Out
           </button>

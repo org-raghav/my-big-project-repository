@@ -13,7 +13,7 @@ function HomeGuest() {
     e.preventDefault();
     //alert("handle submit");
     try {
-      await axios.post("http://localhost:8080/users/sign-up", {
+      await axios.post("/users/sign-up", {
        firstName, lastName, email, password
       });
       console.log("User is successfully created.");
@@ -23,7 +23,7 @@ function HomeGuest() {
   }
 
   return (
-    <Page title="Guest">
+    <Page title="Guest" wide={true}>
       <div className="row align-items-center">
         <div className="col-lg-7 py-3 py-md-5">
           <h1 className="display-3">Remember Writing</h1>
