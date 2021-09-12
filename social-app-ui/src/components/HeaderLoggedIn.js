@@ -1,14 +1,18 @@
 import axios from 'axios';
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
+import ApplicationContext from '../ApplicationContext';
 
 export default function HeaderLoggedIn(props) {
+
+  const {setLoggedIn} = useContext(ApplicationContext);
+
   //here we are setting setLoggedIn function to false
   //so that we can see our LoggedOut component again
   //because it is the logic implemented by ternary operator
   //defined in this parent component Header.js
   function handleLogOut(){
-    props.setLoggedIn(false);
+    setLoggedIn(false);
     localStorage.removeItem('userId');
     localStorage.removeItem('Authorization');
     localStorage.removeItem('avatar');

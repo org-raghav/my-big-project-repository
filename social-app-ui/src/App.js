@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import "./App.css";
+import ApplicationContext from "./ApplicationContext";
 import About from "./components/About";
 import CreatePost from "./components/CreatePost";
 import FlashMessage from "./components/FlashMessage";
@@ -16,36 +17,41 @@ import ViewSinglePost from "./components/ViewSinglePost";
 axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("Authorization")));
+  const [loggedIn, setLoggedIn] = useState(
+    Boolean(localStorage.getItem("Authorization"))
+  );
   const [flashMessages, setFlashMessages] = useState([]);
-  
-  function addFlashMessage(message){
-    setFlashMessages(prev => prev.concat(message));
+
+  function addFlashMessage(message) {
+    setFlashMessages((prev) => prev.concat(message));
   }
 
+  //Always remember Route tag works in order
   return (
-    <BrowserRouter>
-      <FlashMessage messages={flashMessages}/>
-      <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-      <Switch>
-        <Route path="/" exact>
-          {loggedIn ? <Home /> : <HomeGuest />}
-        </Route>
-        <Route path="/posts">
-          <CreatePost addFlashMessage={addFlashMessage}/>
-        </Route>
-        <Route path="/posts/:postId">
-          <ViewSinglePost />
-        </Route>
-        <Route path="/about-us">
-          <About />
-        </Route>
-        <Route path="/terms">
-          <Terms />
-        </Route>
-      </Switch>
-      <Footer />
-    </BrowserRouter>
+    <ApplicationContext.Provider value={{addFlashMessage, setLoggedIn}}>
+      <BrowserRouter>
+        <FlashMessage messages={flashMessages} />
+        <Header loggedIn={loggedIn} />
+        <Switch>
+          <Route path="/" exact>
+            {loggedIn ? <Home /> : <HomeGuest />}
+          </Route>
+          <Route path="/posts/:postId">
+            <ViewSinglePost />
+          </Route>
+          <Route path="/posts">
+            <CreatePost />
+          </Route>
+          <Route path="/about-us">
+            <About />
+          </Route>
+          <Route path="/terms">
+            <Terms />
+          </Route>
+        </Switch>
+        <Footer />
+      </BrowserRouter>
+    </ApplicationContext.Provider>
   );
 }
 

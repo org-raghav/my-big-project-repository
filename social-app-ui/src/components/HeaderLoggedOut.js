@@ -1,7 +1,11 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import ApplicationContext from "../ApplicationContext";
 
 export default function HeaderLoggedOut(props) {
+
+  const {setLoggedIn} = useContext(ApplicationContext);
+
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
@@ -37,7 +41,7 @@ export default function HeaderLoggedOut(props) {
         //and When User is successfully loggedIn then  after  rerender this
         //component is automatically not shownby ternary operator defined in
         //Header component which is also a parent of this component.
-        props.setLoggedIn(true);
+        setLoggedIn(true);
       }
       if (response.data) {
         //Not working in my case as because spring security do not return anything

@@ -1,9 +1,9 @@
 import React from "react";
 import Page from "./Page";
 
-export default function ViewSinglePost() {
+function ViewSinglePost() {
   return (
-    <Page>
+    <Page title="Post">
       <div className="d-flex justify-content-between">
         <h2>Example Post Title</h2>
         <span className="pt-2">
@@ -45,3 +45,5 @@ export default function ViewSinglePost() {
     </Page>
   );
 }
+
+export default ViewSinglePost;
