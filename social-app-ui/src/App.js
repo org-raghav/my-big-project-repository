@@ -12,9 +12,7 @@ import HomeGuest from "./components/HomeGuest";
 import Terms from "./components/Terms";
 import ViewSinglePost from "./components/ViewSinglePost";
 
-axios.defaults.baseURL= "http://localhost:8080";
-axios.defaults.headers.common['Authorization'] = localStorage.getItem("Authorization");
-
+axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(
@@ -28,10 +26,10 @@ function App() {
         <Route path="/" exact>
           {loggedIn ? <Home /> : <HomeGuest />}
         </Route>
-        <Route path="/create-post">
-            <CreatePost  />
+        <Route path="/posts">
+          <CreatePost />
         </Route>
-        <Route path="/post/:postId">
+        <Route path="/posts/:postId">
           <ViewSinglePost />
         </Route>
         <Route path="/about-us">

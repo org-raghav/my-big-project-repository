@@ -10,10 +10,16 @@ function CreatePost(props) {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const response = await axios.post("/create-post", { title, body });
+      const response = await axios.post("/posts", { title, body });
       console.log(response);
-      //Redirect to new post(blog) url(Which is created by this post request)
-      props.history.push(`/post/response.data.postId`);
+      if (response.status === 201) {
+        console.log(response.data.postId);
+        console.log(response.data.title);
+        console.log(response.data.body);
+        //Redirect to new post(blog) url(Which is created by this post request)
+        props.history.push(`/posts/${response.data.postId}`);
+      }else
+       console.log("no data available to preview !")
     } catch (ex) {
       console.log("An Exception occured during create Post request");
     }
@@ -27,7 +33,7 @@ function CreatePost(props) {
             <small>Title</small>
           </label>
           <input
-            autofocus
+            autoFocus
             name="title"
             onChange={(e) => setTitle(e.target.value)}
             id="post-title"

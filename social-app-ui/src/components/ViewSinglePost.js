@@ -7,7 +7,7 @@ export default function ViewSinglePost() {
       <div className="d-flex justify-content-between">
         <h2>Example Post Title</h2>
         <span className="pt-2">
-          <a href="#" class="text-primary mr-2" title="Edit">
+          <a href="#" className="text-primary mr-2" title="Edit">
             <i className="fas fa-edit"></i>
           </a>
           <a className="delete-post-button text-danger" title="Delete">
