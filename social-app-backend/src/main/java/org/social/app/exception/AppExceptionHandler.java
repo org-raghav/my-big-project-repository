@@ -48,4 +48,10 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.SERVICE_UNAVAILABLE);
 	}
 	
+	@ExceptionHandler(PostNotFoundException.class)
+	public ResponseEntity<ErrorMessage> handleUserNotFoundException(PostNotFoundException ex, WebRequest request){
+		ErrorMessage errorMessage = new ErrorMessage(new Date(), ex.getMessage());
+		return new ResponseEntity<ErrorMessage>(errorMessage, HttpStatus.NOT_FOUND);
+	}
+	
 }

@@ -22,7 +22,7 @@ public class UserPrincipal implements UserDetails{
 	public String getUserId() {
 		return this.userId;
 	}
-
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new HashSet<>();

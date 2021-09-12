@@ -1,0 +1,16 @@
+
+
+http://localhost:8080/users/sign-up
+{
+	"firstName" : "raghav",
+	"lastName" : "rai",
+	"email" : "org.raghav@gmail.com",
+	"password" : "123"
+}
+
+
+http://localhost:8080/login
+{
+	"email": "org.raghav@gmail.com",
+	"password" : "123"
+}

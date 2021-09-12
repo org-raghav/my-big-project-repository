@@ -1,12 +1,16 @@
 package org.social.app.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -36,6 +40,9 @@ public class UserEntity implements Serializable {
 
 	@Column(nullable = false)
 	private boolean emailVerificationStatus = false;
+	
+	@OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<PostEntity> posts;
 
 	
 	public UserEntity() {
@@ -120,6 +127,20 @@ public class UserEntity implements Serializable {
 	public void setEmailVerificationStatus(boolean emailVerificationStatus) {
 		this.emailVerificationStatus = emailVerificationStatus;
 	}
-	
+
+
+	public List<PostEntity> getPosts() {
+		return posts;
+	}
+
+
+	public void setPosts(List<PostEntity> posts) {
+		this.posts = posts;
+	}
+
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 }
