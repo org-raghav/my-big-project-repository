@@ -17,6 +17,7 @@ function CreatePost(props) {
         console.log(response.data.title);
         console.log(response.data.body);
         //Redirect to new post(blog) url(Which is created by this post request)
+        props.addFlashMessage("Congrats! you are successfully created a post")
         props.history.push(`/posts/${response.data.postId}`);
       }else
        console.log("no data available to preview !")

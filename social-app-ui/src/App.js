@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
 import About from "./components/About";
 import CreatePost from "./components/CreatePost";
+import FlashMessage from "./components/FlashMessage";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -15,19 +16,23 @@ import ViewSinglePost from "./components/ViewSinglePost";
 axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(
-    Boolean(localStorage.getItem("Authorization"))
-  );
+  const [loggedIn, setLoggedIn] = useState(Boolean(localStorage.getItem("Authorization")));
+  const [flashMessages, setFlashMessages] = useState([]);
+  
+  function addFlashMessage(message){
+    setFlashMessages(prev => prev.concat(message));
+  }
 
   return (
     <BrowserRouter>
+      <FlashMessage messages={flashMessages}/>
       <Header loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
       <Switch>
         <Route path="/" exact>
           {loggedIn ? <Home /> : <HomeGuest />}
         </Route>
         <Route path="/posts">
-          <CreatePost />
+          <CreatePost addFlashMessage={addFlashMessage}/>
         </Route>
         <Route path="/posts/:postId">
           <ViewSinglePost />
