@@ -11,14 +11,14 @@ export default function HeaderLoggedIn(props) {
   //so that we can see our LoggedOut component again
   //because it is the logic implemented by ternary operator
   //defined in this parent component Header.js
-  function handleLogOut(){
+  function handleLogout(){
     //setLoggedIn(false);//previous code using useState()
     dispatch({type : "logout", value : "You have successfully LoggedOut!"});
-    localStorage.removeItem('userId');
-    localStorage.removeItem('Authorization');
-    localStorage.removeItem('avatar');
+    //localStorage.removeItem('userId');
+    //localStorage.removeItem('Authorization');
+    //localStorage.removeItem('avatar');
     //removing axios Authorization header for further request
-    axios.defaults.headers.common["Authorization"] = '';
+    //axios.defaults.headers.common["Authorization"] = '';
   }
     return (
         <div className="flex-row my-3 my-md-0">
@@ -35,7 +35,7 @@ export default function HeaderLoggedIn(props) {
           <Link to="/posts" className="btn btn-sm btn-success mr-2">
             Create Post
           </Link>
-          <button onClick={handleLogOut} className="btn btn-sm btn-secondary">
+          <button onClick={handleLogout} className="btn btn-sm btn-secondary">
             Sign Out
           </button>
         </div>

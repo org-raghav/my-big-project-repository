@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
@@ -22,6 +22,11 @@ function App() {
   const initialState = {
     loggedIn: Boolean(localStorage.getItem("Authorization")),
     flashMessages: [],
+    user: {
+      token: localStorage.getItem("Authorization"),
+      userId: localStorage.getItem("userId"),
+      avatar: localStorage.getItem("avatar"),
+    },
   };
 
   // const[state, dispatch] = useReducer(ourReducer, initialState);
@@ -46,26 +51,41 @@ function App() {
     }
   } */
 
-  // Immer draft variable is able to access values of state 
+  // Immer draft variable is able to access values of state
   // draft is a copy of actual state so we can modify it directly.
 
   function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
         draft.loggedIn = true;
-        draft.flashMessages.push(action.value);
-        return;
+        draft.flashMessages.push(action.value); //we can directly modify draft
+        draft.user = action.data;
+        return; //break
       case "logout":
-        draft.loggedIn = true;
+        draft.loggedIn = false;
         draft.flashMessages.push(action.value);
-        return;
+        return; //break
       case "flashMessage":
         draft.flashMessages.push(action.value);
-        return;
+        return; //break
       default:
-        return;
+        return; //break
     }
   }
+
+  useEffect(() => {
+    if (state.loggedIn) {
+      localStorage.setItem("userId", state.user.userId);
+      localStorage.setItem("Authorization", state.user.token);
+      localStorage.setItem("avatar", state.user.avatar);
+      axios.defaults.headers.common["Authorization"] = state.user.token;
+    } else {
+      localStorage.removeItem("userId");
+      localStorage.removeItem("Authorization");
+      localStorage.removeItem("avatar");
+      axios.defaults.headers.common["Authorization"] = '';
+    }
+  }, [state.loggedIn]);
 
   //Always remember Route tag works in order
   return (
