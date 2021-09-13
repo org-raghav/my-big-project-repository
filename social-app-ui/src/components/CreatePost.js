@@ -1,16 +1,21 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { withRouter } from "react-router-dom";
-import ApplicationContext from "../ApplicationContext";
+import DispatchContext from "../DispatchContext";
+//import ApplicationContext from "../ApplicationContext";
 import Page from "./Page";
 
 function CreatePost(props) {
+
+  const {dispatch} = useContext(DispatchContext);
+
   const [title, setTitle] = useState();
   const [body, setBody] = useState();
 
   //useContext(arg) as we wrap our App in ApplicationContext 
   //so that we are using here 
-  const {addFlashMessage} = useContext(ApplicationContext);
+  //const {addFlashMessage} = useContext(ApplicationContext);
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -22,7 +27,8 @@ function CreatePost(props) {
         console.log(response.data.title);
         console.log(response.data.body);
         //Redirect to new post(blog) url(Which is created by this post request)
-        addFlashMessage("Congrats! you are successfully created an amazing post!")
+        //("Congrats! you are successfully created an amazing post!");
+        dispatch({type : "flashMessage", value : "Congrats ! you have created an amazing post."})
         props.history.push(`/posts/${response.data.postId}`);
       }else
        console.log("no data available to preview !")

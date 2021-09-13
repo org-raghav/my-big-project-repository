@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import StateContext from "../StateContext";
 import HeaderLoggedIn from "./HeaderLoggedIn";
 import HeaderLoggedOut from "./HeaderLoggedOut";
 
 function Header(props) {
+
+  const {state} = useContext(StateContext);
+
   return (
     <header className="header-bar bg-primary mb-3">
       <div className="container d-flex flex-column flex-md-row align-items-center p-3">
@@ -11,7 +15,7 @@ function Header(props) {
             Our Social Blogs
           </a>
         </h4>
-        {props.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
+        {state.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
       </div>
     </header>
   );

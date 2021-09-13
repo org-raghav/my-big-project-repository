@@ -1,18 +1,19 @@
 import axios from 'axios';
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
-import ApplicationContext from '../ApplicationContext';
+import DispatchContext from '../DispatchContext';
 
 export default function HeaderLoggedIn(props) {
 
-  const {setLoggedIn} = useContext(ApplicationContext);
+  const {dispatch} = useContext(DispatchContext);
 
   //here we are setting setLoggedIn function to false
   //so that we can see our LoggedOut component again
   //because it is the logic implemented by ternary operator
   //defined in this parent component Header.js
   function handleLogOut(){
-    setLoggedIn(false);
+    //setLoggedIn(false);//previous code using useState()
+    dispatch({type : "logout", value : "You have successfully LoggedOut!"});
     localStorage.removeItem('userId');
     localStorage.removeItem('Authorization');
     localStorage.removeItem('avatar');
