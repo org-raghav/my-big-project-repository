@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useReducer } from "react";
+import React from "react";
+import { useImmerReducer } from "use-immer";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import "./App.css";
@@ -18,19 +19,20 @@ import StateContext from "./StateContext";
 axios.defaults.baseURL = "http://localhost:8080";
 
 function App() {
-
-  const initialState  = {
-    loggedIn : Boolean(localStorage.getItem("Authorization")),
-    flashMessages : []
+  const initialState = {
+    loggedIn: Boolean(localStorage.getItem("Authorization")),
+    flashMessages: [],
   };
 
-  const[state, dispatch] = useReducer(ourReducer, initialState);
+  // const[state, dispatch] = useReducer(ourReducer, initialState);
+
+  const [state, dispatch] = useImmerReducer(ourReducer, initialState);
 
   //ourReducer(arg1, arg2) takes two args
   //arg1 is previous value of our state(means last updated value)
-  //meaning that we can able to take decision of what current status we want 
+  //meaning that we can able to take decision of what current status we want
   //on behalf of our  previous state.
-  function ourReducer(state, action){
+  /* function ourReducer(state, action){
     switch(action.type){
       case "login":
         console.log("i am invoked!");
@@ -42,34 +44,55 @@ function App() {
       default :
         return;
     }
+  } */
+
+  // Immer draft variable is able to access values of state 
+  // draft is a copy of actual state so we can modify it directly.
+
+  function ourReducer(draft, action) {
+    switch (action.type) {
+      case "login":
+        draft.loggedIn = true;
+        draft.flashMessages.push(action.value);
+        return;
+      case "logout":
+        draft.loggedIn = true;
+        draft.flashMessages.push(action.value);
+        return;
+      case "flashMessage":
+        draft.flashMessages.push(action.value);
+        return;
+      default:
+        return;
+    }
   }
 
   //Always remember Route tag works in order
   return (
-    <StateContext.Provider value={{state}}>
-      <DispatchContext.Provider value={{dispatch}}>
-      <BrowserRouter>
-        <FlashMessage messages={state.flashMessages} />
-        <Header />
-        <Switch>
-          <Route path="/" exact>
-            {state.loggedIn ? <Home /> : <HomeGuest />}
-          </Route>
-          <Route path="/posts/:postId">
-            <ViewSinglePost />
-          </Route>
-          <Route path="/posts">
-            <CreatePost />
-          </Route>
-          <Route path="/about-us">
-            <About />
-          </Route>
-          <Route path="/terms">
-            <Terms />
-          </Route>
-        </Switch>
-        <Footer />
-      </BrowserRouter>
+    <StateContext.Provider value={{ state }}>
+      <DispatchContext.Provider value={{ dispatch }}>
+        <BrowserRouter>
+          <FlashMessage messages={state.flashMessages} />
+          <Header />
+          <Switch>
+            <Route path="/" exact>
+              {state.loggedIn ? <Home /> : <HomeGuest />}
+            </Route>
+            <Route path="/posts/:postId">
+              <ViewSinglePost />
+            </Route>
+            <Route path="/posts">
+              <CreatePost />
+            </Route>
+            <Route path="/about-us">
+              <About />
+            </Route>
+            <Route path="/terms">
+              <Terms />
+            </Route>
+          </Switch>
+          <Footer />
+        </BrowserRouter>
       </DispatchContext.Provider>
     </StateContext.Provider>
   );
