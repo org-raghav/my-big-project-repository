@@ -1,22 +1,22 @@
 package org.social.app.repository;
 
-import org.social.app.entity.UserEntity;
+import org.social.app.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	boolean existsByEmail(String email);
 
-	boolean existsByUserId(String userId);
+	boolean existsByUserUid(String userUid);
 
-	UserEntity findByUserId(String userId);
+	User findByUserUid(String userUid);
 
-	UserEntity findByEmail(String email);
+	User findByEmail(String email);
 
-	UserEntity findByEmailVerificationToken(String token);
+	User findByEmailVerificationToken(String token);
 
-	void deleteByUserId(String userId);
+	void deleteByUserUid(String userUid);
 
 }

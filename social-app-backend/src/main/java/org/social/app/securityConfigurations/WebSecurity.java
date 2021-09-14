@@ -35,15 +35,16 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 	    //configuration.setAllowCredentials(true);
+		configuration.setAllowedOriginPatterns(Arrays.asList("*"));
 	    configuration.setAllowedOrigins(Arrays.asList("*"));
 	    //configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
 		configuration.setAllowedMethods(Arrays.asList("*"));
 
-	    configuration.setAllowedHeaders(Arrays.asList("X-Requested-With","Origin","Content-Type","Accept","Authorization", "userId"));
+	    configuration.setAllowedHeaders(Arrays.asList("X-Requested-With","Origin","Content-Type","Accept","Authorization"));
 	    
 	    // This allow us to expose the headers
 	    configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Headers", "Authorization, x-xsrf-token, Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, " +
-	            "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers", "userId"));
+	            "Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"));
 	    
 	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	    source.registerCorsConfiguration("/**", configuration);
@@ -66,14 +67,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, env.getProperty("password.reset.url")).permitAll()
 				.antMatchers(HttpMethod.GET, env.getProperty("password.verification.url")).permitAll().anyRequest()
 				.authenticated().and().addFilter(getAuthenticationFilter())
-				.addFilter(new AuthorizationFilter(authenticationManager(), env, userService))
+				.addFilter(new AuthorizationFilter(authenticationManager(), env))
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 	}
 
 	public AuthenticationFilter getAuthenticationFilter() throws Exception {
-		AuthenticationFilter authenticationFilter = new AuthenticationFilter(userService, env, authenticationManager());
+		AuthenticationFilter authenticationFilter = new AuthenticationFilter(authenticationManager(), env);
 		authenticationFilter.setFilterProcessesUrl(env.getProperty("login.url.path"));
 		return authenticationFilter;
 	}

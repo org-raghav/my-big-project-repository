@@ -4,7 +4,7 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
-import org.social.app.entity.UserEntity;
+import org.social.app.entity.User;
 import org.social.app.exception.UserAlreadyExistsException;
 import org.social.app.model.request.UserDetailsRequestModel;
 import org.social.app.model.response.UserDetailsResponseModel;
@@ -37,13 +37,13 @@ public class UserController {
 			throw new UserAlreadyExistsException("Already Exists !!! Try other!!!");
 		}
 
-		UserEntity userEntity = userService.createUser(userDetailsRequestModel);
+		User user = userService.createUser(userDetailsRequestModel);
 
 		UserDetailsResponseModel userDetailsResponseModel = new UserDetailsResponseModel();
-		BeanUtils.copyProperties(userEntity, userDetailsResponseModel);
+		BeanUtils.copyProperties(user, userDetailsResponseModel);
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{userId}")
-				.buildAndExpand(userEntity.getUserId()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{userUid}")
+				.buildAndExpand(user.getUserUid()).toUri();
 
 		return ResponseEntity.created(location).body(userDetailsResponseModel);
 

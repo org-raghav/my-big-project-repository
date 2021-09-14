@@ -2,7 +2,7 @@ package org.social.app.service;
 
 import java.util.UUID;
 
-import org.social.app.entity.UserEntity;
+import org.social.app.entity.User;
 import org.social.app.model.request.UserDetailsRequestModel;
 import org.social.app.repository.UserRepository;
 import org.social.app.securityConfigurations.UserPrincipal;
@@ -28,23 +28,23 @@ public class UserServiceImpl  implements UserService{
 	}
 
 	@Override
-	public boolean isUserIdExists(String userId) {
-		return userRepository.existsByUserId(userId);
+	public boolean isUserUidExists(String userId) {
+		return userRepository.existsByUserUid(userId);
 	}
 
 	@Override
-	public UserEntity createUser(UserDetailsRequestModel userDetailsRequestModel) {
+	public User createUser(UserDetailsRequestModel userDetailsRequestModel) {
 		
-		UserEntity userEntity = new UserEntity();
-		BeanUtils.copyProperties(userDetailsRequestModel, userEntity);
+		User user = new User();
+		BeanUtils.copyProperties(userDetailsRequestModel, user);
 		
-		userEntity.setUserId(UUID.randomUUID().toString());
+		user.setUserUid(UUID.randomUUID().toString());
 		
-		userEntity.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetailsRequestModel.getPassword()));
+		user.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetailsRequestModel.getPassword()));
 		
-		userEntity.setEmailVerificationStatus(true);
+		user.setEmailVerificationStatus(true);
 		
-		userEntity.setEmailVerificationToken("");
+		user.setEmailVerificationToken("");
 
 		// creating a user with user power
 		//RoleEntity roleEntity = roleRepository.findByName("ROLE_USER");
@@ -54,7 +54,7 @@ public class UserServiceImpl  implements UserService{
 
 		//userEntity.setRoles(roles);
 
-		UserEntity createdUser = userRepository.saveAndFlush(userEntity);
+		User createdUser = userRepository.saveAndFlush(user);
 
 		return createdUser;
 	}
@@ -65,23 +65,13 @@ public class UserServiceImpl  implements UserService{
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserEntity userEntity = userRepository.findByEmail(username);
+		User user = userRepository.findByEmail(username);
 
-		if (userEntity == null)
+		if (user == null)
 			throw new UsernameNotFoundException("user is not exists!!! with email: " + username);
 				
-		return new UserPrincipal(userEntity);
+		return new UserPrincipal(user);
 
-	}
-
-	@Override
-	public UserEntity getUserByEmail(String email) {
-		return userRepository.findByEmail(email);
-	}
-
-	@Override
-	public UserEntity getUserByUserId(String userId) {
-		return userRepository.findByUserId(userId);
 	}
 
 	

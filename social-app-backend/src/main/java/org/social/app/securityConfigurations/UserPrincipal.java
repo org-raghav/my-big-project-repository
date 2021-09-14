@@ -3,39 +3,46 @@ package org.social.app.securityConfigurations;
 import java.util.Collection;
 import java.util.HashSet;
 
-import org.social.app.entity.UserEntity;
+import org.social.app.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 public class UserPrincipal implements UserDetails{
 	
 	private static final long serialVersionUID = -372248885026994774L;
 
-	private UserEntity userEntity;
-	private String userId;
+	private User user;
 
-	public UserPrincipal(UserEntity userEntity) {
-		this.userEntity = userEntity;
-		this.userId = userEntity.getUserId();
+	public UserPrincipal(User  user) {
+		this.user =  user;
+	}	
+	
+	public String getUserUid() {
+		return user.getUserUid();
 	}
-
-	public String getUserId() {
-		return this.userId;
+	
+	public String getFirstName() {
+		return  user.getFirstName();
 	}
-
+	
+	public String getLatName() {
+		return  user.getLastName();
+	}
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new HashSet<>();
 	}
-	
+
 	@Override
 	public String getPassword() {
-		return userEntity.getEncryptedPassword();
+		return user.getEncryptedPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		return userEntity.getEmail();
+		return user.getEmail();
 	}
 
 	@Override

@@ -1,15 +1,15 @@
 package org.social.app.model.response;
 
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter@Setter@NoArgsConstructor
-public class UserDetailsResponseModel {
+public class ProfileCountsResponseModel {
+
+	private Long postCount;
+	private Long followerCount;
+	private Long followingCount;
 	
-	private String userUid;
-	private String firstName;
-	private String lastName;
-	private String email;
-		
 }

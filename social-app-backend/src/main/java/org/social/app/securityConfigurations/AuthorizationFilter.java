@@ -12,22 +12,23 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
-import org.social.app.entity.UserEntity;
+import org.social.app.entity.User;
 import org.social.app.service.UserService;
 
 public class AuthorizationFilter extends BasicAuthenticationFilter {
 
 	private Environment env;
-	private UserService userService;
 
 	@Autowired
-	public AuthorizationFilter(AuthenticationManager authManager, Environment environment, UserService userService) {
+	public AuthorizationFilter(AuthenticationManager authManager, Environment env) {
 		super(authManager);
-		this.env = environment;
-		this.userService = userService;
+		this.env = env;
 	}
 
 	@Override
@@ -55,20 +56,18 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 		if (authorizationHeader == null) {
 			return null;
 		}
+		
+		String jwt = authorizationHeader.replace(env.getProperty("authorization.token.header.prefix"), "");
+		
+		Claims claims = Jwts.parser()         
+				   .setSigningKey(env.getProperty("token.secret"))
+				   .parseClaimsJws(jwt).getBody();
 
-		String token = authorizationHeader.replace(env.getProperty("authorization.token.header.prefix"), "");
-
-		String userId = Jwts.parser().setSigningKey(env.getProperty("token.secret")).parseClaimsJws(token)
-				.getBody().getSubject();
-
-		if (userId == null) {
-			return null;
-		}
-
-		UserEntity userEntity = userService.getUserByUserId(userId);
-		UserPrincipal user = new UserPrincipal(userEntity);
-
-		return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+		//claims.getId();claims.getAudience();claims.getIssuer();etc...
+		
+		UserPrincipal userPrincipal = claims.get("user", UserPrincipal.class);
+		
+		return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
 
 	}
 }

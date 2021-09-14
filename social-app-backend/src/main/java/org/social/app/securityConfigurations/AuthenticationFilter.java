@@ -2,7 +2,6 @@ package org.social.app.securityConfigurations;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.social.app.model.request.UserLoginRequestModel;
+import org.social.app.model.response.UserLoginResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,26 +23,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
-import org.social.app.entity.UserEntity;
-import org.social.app.model.request.UserLoginRequestModel;
-import org.social.app.service.UserService;
 
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private final AuthenticationManager authenticationManager;
-	private Environment env;
-	private UserService userService;
+	private final Environment env;
 
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	public AuthenticationFilter(UserService userService, Environment env, AuthenticationManager authenticationManager) {
+	public AuthenticationFilter(AuthenticationManager authenticationManager, Environment env) {
 		this.authenticationManager = authenticationManager;
 		this.env = env;
-		this.userService = userService;
 	}
 
 	@Override
@@ -65,22 +61,26 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication auth) throws IOException, ServletException {
 
-		UserPrincipal user = (UserPrincipal) auth.getPrincipal();//return  needs to Type cast into UserDetails class type
-		String email = user.getUsername();
+		UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();// return needs to Type cast into UserDetails
+																			// class type
 
-		UserEntity userEntity = userService.getUserByEmail(email);
-
-		String token = Jwts.builder().setSubject(userEntity.getUserId())
-				.setExpiration(
-						new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
+		Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
+		String jwt = Jwts.builder().setClaims(claims)
 				.signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")).compact();
 
-		log.info(token);
+		log.info(" ****** my jwt token ********* " + jwt);
 
-		token = env.getProperty("authorization.token.header.prefix") + token;
+		String token = env.getProperty("authorization.token.header.prefix") + jwt;
+		
+		UserLoginResponseModel userData = new UserLoginResponseModel();
+		userData.setFirstName(userPrincipal.getFirstName());
+		userData.setLastName(userPrincipal.getLatName());
+		userData.setUserUid(userPrincipal.getUserUid());
+		String json = new ObjectMapper().writeValueAsString(userData);
+		log.info(" ****** user json data ********* " + json);
 
+		response.getWriter().write(json);
 		response.addHeader(env.getProperty("authorization.token.header.name"), token);
-		response.addHeader("userId", userEntity.getUserId());
 
 	}
 
