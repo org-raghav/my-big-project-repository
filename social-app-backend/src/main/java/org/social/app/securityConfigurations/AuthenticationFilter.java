@@ -2,6 +2,7 @@ package org.social.app.securityConfigurations;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -64,7 +65,18 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();// return needs to Type cast into UserDetails
 																			// class type
 
-		Claims claims = Jwts.claims().setSubject(userPrincipal.getUsername());
+		Claims claims = Jwts.claims();
+		claims.setIssuer("Social-Blog-Application");
+		claims.setSubject(userPrincipal.getUsername());
+		claims.setId(userPrincipal.getUserUid());
+		claims.setIssuedAt(new Date(System.currentTimeMillis()));
+		claims.setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))));
+		
+		//we  can put whole object here
+		//but object must be type of HashMap so that in form of json object
+		//claims.put("key", value);//value is of type HashMap
+		claims.put("my-key", "my-value");
+		
 		String jwt = Jwts.builder().setClaims(claims)
 				.signWith(SignatureAlgorithm.HS512, env.getProperty("token.secret")).compact();
 

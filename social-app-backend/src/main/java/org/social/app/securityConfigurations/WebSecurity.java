@@ -65,9 +65,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.POST, env.getProperty("signUp.url.path")).permitAll()
 				.antMatchers(HttpMethod.GET, env.getProperty("email.verification.url")).permitAll()
 				.antMatchers(HttpMethod.POST, env.getProperty("password.reset.url")).permitAll()
-				.antMatchers(HttpMethod.GET, env.getProperty("password.verification.url")).permitAll().anyRequest()
-				.authenticated().and().addFilter(getAuthenticationFilter())
-				.addFilter(new AuthorizationFilter(authenticationManager(), env))
+				.antMatchers(HttpMethod.GET, env.getProperty("password.verification.url")).permitAll()
+				.anyRequest()
+				.authenticated()
+				.and()
+				.addFilter(getAuthenticationFilter())
+				.addFilter(new AuthorizationFilter(authenticationManager(), env, userService))
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

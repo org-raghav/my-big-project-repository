@@ -16,9 +16,9 @@ public class UnFollowCompositeKey  implements Serializable {
 	private static final long serialVersionUID = 6719431041831727856L;
 
 	//contains the follower userId
-	private User unFollower;
+	private String unFollowerUid;
 
 	//contains following userId
-	private String unfollowing;
+	private String unfollowingUid;
 		
 }

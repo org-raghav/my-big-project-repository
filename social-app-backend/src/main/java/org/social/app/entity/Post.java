@@ -1,5 +1,7 @@
 package org.social.app.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +19,9 @@ import lombok.Setter;
 
 @Entity
 @Getter@Setter@NoArgsConstructor
-public class Post {
+public class Post implements Serializable{
+
+	private static final long serialVersionUID = 7488903407258825040L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +34,10 @@ public class Post {
 	private String body;
 	
 	@Column(nullable = false)
-	private String postId;
+	private String postUid;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JsonIgnore
 	private User user;
-
 	
 }

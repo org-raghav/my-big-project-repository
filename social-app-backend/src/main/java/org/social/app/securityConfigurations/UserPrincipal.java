@@ -7,29 +7,28 @@ import org.social.app.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+public class UserPrincipal implements UserDetails {
 
-public class UserPrincipal implements UserDetails{
-	
 	private static final long serialVersionUID = -372248885026994774L;
 
 	private User user;
 
-	public UserPrincipal(User  user) {
-		this.user =  user;
-	}	
-	
+	public UserPrincipal(User user) {
+		this.user = user;
+	}
+
 	public String getUserUid() {
 		return user.getUserUid();
 	}
-	
+
 	public String getFirstName() {
-		return  user.getFirstName();
+		return user.getFirstName();
 	}
-	
+
 	public String getLatName() {
-		return  user.getLastName();
+		return user.getLastName();
 	}
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return new HashSet<>();

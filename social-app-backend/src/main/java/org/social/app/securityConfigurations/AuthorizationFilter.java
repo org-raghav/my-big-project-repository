@@ -7,29 +7,32 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.social.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
-import org.social.app.entity.User;
-import org.social.app.service.UserService;
-
 public class AuthorizationFilter extends BasicAuthenticationFilter {
+	
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private Environment env;
-
+	private UserService userService;
+	
 	@Autowired
-	public AuthorizationFilter(AuthenticationManager authManager, Environment env) {
+    public AuthorizationFilter(AuthenticationManager authManager, Environment env, UserService userService) {
 		super(authManager);
 		this.env = env;
-	}
+		this.userService = userService;
+    }
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain)
@@ -49,23 +52,30 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
 		chain.doFilter(req, res);
 	}
 
-	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest req) {
+	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
 
-		String authorizationHeader = req.getHeader(env.getProperty("authorization.token.header.name"));
+		//get Authorization header contains user token
+		String token = request.getHeader(env.getProperty("authorization.token.header.name"));
 
-		if (authorizationHeader == null) {
+		if (token == null) {
 			return null;
 		}
 		
-		String jwt = authorizationHeader.replace(env.getProperty("authorization.token.header.prefix"), "");
+		String jwt = token.replace(env.getProperty("authorization.token.header.prefix"), "");
 		
 		Claims claims = Jwts.parser()         
 				   .setSigningKey(env.getProperty("token.secret"))
 				   .parseClaimsJws(jwt).getBody();
 
 		//claims.getId();claims.getAudience();claims.getIssuer();etc...
+		String username = claims.getSubject();
+		String userUid  = claims.getId();
+		String myValue =  (String) claims.get("my-key");
+		log.info("***** my-key ******  " + myValue);
 		
-		UserPrincipal userPrincipal = claims.get("user", UserPrincipal.class);
+		UserPrincipal userPrincipal = (UserPrincipal) userService.loadUserByUsername(username);
+				
+		log.info("***** User is successfully Authorized ******  " + username + "userUid is :: " + userUid);
 		
 		return new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
 
