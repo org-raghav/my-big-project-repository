@@ -1,6 +1,7 @@
 package org.social.app.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -9,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,10 +42,14 @@ public class User implements Serializable {
 	private String userUid;
 
 	private String emailVerificationToken;
+	
+	@CreationTimestamp
+	private LocalDateTime joinningDate;
 
 	@Column(nullable = false)
 	private boolean emailVerificationStatus = false;
 
 	@OneToMany(mappedBy = "user")
 	private List<Post> posts;
+	
 }

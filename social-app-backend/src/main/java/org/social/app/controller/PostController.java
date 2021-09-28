@@ -1,14 +1,10 @@
 package org.social.app.controller;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.social.app.entity.Post;
 import org.social.app.model.request.CreatePostRequestModel;
 import org.social.app.model.response.PostResponseModel;
-import org.social.app.repository.PostRepository;
-import org.social.app.repository.UserRepository;
 import org.social.app.securityConfigurations.UserPrincipal;
 import org.social.app.service.PostService;
 import org.springframework.beans.BeanUtils;
@@ -31,15 +27,9 @@ public class PostController {
 	@Autowired
 	private PostService postService;
 	
-
-	@Autowired
-	private PostRepository postRepository;
-
-	@Autowired
-	private UserRepository userRepository;
-	
 	@PostMapping
-	public ResponseEntity<PostResponseModel> createPost(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody CreatePostRequestModel createPostRequestModel) {
+	public ResponseEntity<PostResponseModel> createPost(@AuthenticationPrincipal UserPrincipal userPrincipal, 
+			@RequestBody CreatePostRequestModel createPostRequestModel) {
 		
 		String userUid = userPrincipal.getUserUid();
 		
@@ -50,38 +40,20 @@ public class PostController {
 		PostResponseModel payload = new PostResponseModel();
 		BeanUtils.copyProperties(post, payload);
 		
+		payload.setPostId(post.getPostUid());
 		payload.setCreatedBy(userUid);
+		
+		return ResponseEntity.created(null).body(payload);
+	}
+	
+	@GetMapping(path = "/{postUid}")
+	public ResponseEntity<PostResponseModel> getPost(@AuthenticationPrincipal UserPrincipal userPrincipal, 
+			@PathVariable("postUid") String postUid){
+		
+		PostResponseModel payload = postService.getPostByPostUid(postUid);
 		
 		return ResponseEntity.ok(payload);
 	}
-	
-	@GetMapping(path = "/test1/{userId}")
-	public List<Post> test1(@PathVariable Long userId) {
-		List<Post> posts = postRepository.sqlFindAllPostByUserId(userId);
-		System.out.println("*********" + posts);
-		return  posts;
-	}
-
-	@GetMapping(path = "/test2/{userId}")
-	public long test2(@PathVariable Long userId) {
-		Long postCount = postRepository.sqlCountPostByUserId(userId);
-		return postCount;
-		
-	}
-	
-	@GetMapping(path = "/test3/{userId}")
-	public List<Post> test3(@PathVariable Long userId) {
-		List<Post> posts = postRepository.findByUserId(userId);
-		return posts;
-		
-	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }

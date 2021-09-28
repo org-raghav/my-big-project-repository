@@ -15,7 +15,7 @@ public class ProfileResponseModel {
 	private String profileName;
 	
 	//userUid is his profileUid
-	private String profileUid;
+	private String profileId;
 	
 	//Is user is following the current profile(profileUid) which is displayed 
 	@JsonProperty(namespace = "isFollowing")

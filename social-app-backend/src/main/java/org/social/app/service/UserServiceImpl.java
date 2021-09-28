@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl  implements UserService{
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -34,16 +34,16 @@ public class UserServiceImpl  implements UserService{
 
 	@Override
 	public User createUser(UserDetailsRequestModel userDetailsRequestModel) {
-		
+
 		User user = new User();
 		BeanUtils.copyProperties(userDetailsRequestModel, user);
-		
+
 		user.setUserUid(UUID.randomUUID().toString());
-		
+
 		user.setEncryptedPassword(bCryptPasswordEncoder.encode(userDetailsRequestModel.getPassword()));
-		
+
 		user.setEmailVerificationStatus(true);
-		
+
 		user.setEmailVerificationToken("");
 
 		// creating a user with user power
@@ -61,7 +61,7 @@ public class UserServiceImpl  implements UserService{
 
 	/*
 	 * Prevent new User to login without emailVerification
-	 * 
+	 *
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -69,11 +69,9 @@ public class UserServiceImpl  implements UserService{
 
 		if (user == null)
 			throw new UsernameNotFoundException("user is not exists!!! with email: " + username);
-				
+
 		return new UserPrincipal(user);
 
 	}
-
-	
 
 }

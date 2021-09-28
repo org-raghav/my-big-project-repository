@@ -12,6 +12,6 @@ public class UserLoginResponseModel {
 
 	private String firstName;
 	private String lastName;
-	private String userUid;
+	private String userId;
 
 }

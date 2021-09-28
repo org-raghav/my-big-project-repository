@@ -15,7 +15,7 @@ public class FollowCompositeKey implements Serializable {
 	private static final long serialVersionUID = 6719431041831727856L;
 
 	//contains the follower userId
-	private Long FollowerId;
+	private Long followerId;
 
 	//contains following userId
 	private Long followingId;

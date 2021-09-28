@@ -1,15 +1,18 @@
 package org.social.app.model.response;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter@Setter@NoArgsConstructor
-public class UserDetailsResponseModel {
+public class FollowingsResponseModel {
 	
-	private String userId;
+	private String profileId;
 	private String firstName;
-	private String lastName;
-	private String email;
-		
+	private  String lastName;
+	private LocalDateTime follwingTimestamp;
+	
+
 }

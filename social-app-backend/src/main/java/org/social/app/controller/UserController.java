@@ -4,6 +4,8 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.social.app.entity.User;
 import org.social.app.exception.UserAlreadyExistsException;
 import org.social.app.model.request.UserDetailsRequestModel;
@@ -25,6 +27,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequestMapping(path = "/users")
 public class UserController {
 
+	private Logger log = LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private UserService userService;
 
@@ -41,8 +45,9 @@ public class UserController {
 
 		UserDetailsResponseModel userDetailsResponseModel = new UserDetailsResponseModel();
 		BeanUtils.copyProperties(user, userDetailsResponseModel);
+		userDetailsResponseModel.setUserId(user.getUserUid());
 
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{userUid}")
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{userId}")
 				.buildAndExpand(user.getUserUid()).toUri();
 
 		return ResponseEntity.created(location).body(userDetailsResponseModel);

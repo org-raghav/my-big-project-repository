@@ -87,7 +87,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 		UserLoginResponseModel userData = new UserLoginResponseModel();
 		userData.setFirstName(userPrincipal.getFirstName());
 		userData.setLastName(userPrincipal.getLatName());
-		userData.setUserUid(userPrincipal.getUserUid());
+		userData.setUserId(userPrincipal.getUserUid());
 		String json = new ObjectMapper().writeValueAsString(userData);
 		log.info(" ****** user json data ********* " + json);
 

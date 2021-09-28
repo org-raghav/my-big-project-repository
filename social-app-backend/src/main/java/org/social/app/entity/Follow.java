@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -15,6 +16,7 @@ import lombok.Setter;
 
 @Entity
 @Getter@Setter@NoArgsConstructor
+@Table(name = "follow")
 public class Follow implements Serializable{
 	
 	private static final long serialVersionUID = -6469423474998275521L;

@@ -43,7 +43,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
 	// select a post by post_uid //In database it is post_uid field
 	@Query(value = "SELECT * FROM post WHERE post_uid=:postUid", nativeQuery = true)
-	Optional<Post> sqlFindPostByPostUid(Long postUid);
+	Optional<Post> sqlFindPostByPostUid(String postUid);
 
 	// select all post by user_id //Tested OK
 	@Query(value = "SELECT * FROM post WHERE user_id=:userId", nativeQuery = true)
@@ -52,5 +52,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	// count all post by a user_id //Tested OK
 	@Query(value = "SELECT  COUNT(post_uid) FROM post WHERE user_id=:userId", nativeQuery = true)
 	Long sqlCountPostByUserId(@Param("userId") Long userId);
+	
+	
+	@Query(value = "SELECT * FROM post WHERE MATCH(title, body) AGAINST(:searchTearm IN NATURAL LANGUAGE MODE)", nativeQuery = true)
+	List<Post> sqlFindAllPostByFullTextSearch(@Param("searchTearm") String searchTearm);
+	
+	
+	
 
 }
