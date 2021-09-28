@@ -3,10 +3,9 @@ import React, { useContext, useState } from "react";
 import DispatchContext from "../DispatchContext";
 
 export default function HeaderLoggedOut(props) {
-
   //const { setLoggedIn } = useContext(ApplicationContext);
 
-  const {dispatch} = useContext(DispatchContext);
+  const appDispatch = useContext(DispatchContext);
 
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -24,32 +23,20 @@ export default function HeaderLoggedOut(props) {
       if (response.status === 200) {
         console.log("you are successfully logged in !");
         console.log(response.headers["authorization"]);
-        console.log(response.headers["userid"]);
-        //setting(saving) LoggedIn info(useState) in Browser localStorage
-        //so that useState does not re-initialized and remeber the state.
-        //localStorage.setItem("userId", response.headers["userid"]);
-        //localStorage.setItem("Authorization", response.headers["authorization"]);
-        //localStorage.setItem("avatar", "My-Avatar");
 
-        //setting axios Authorization header for  further request
-        //axios.defaults.headers.common["Authorization"] = response.headers["authorization"];
-        //console.log(axios.defaults.headers.common["Authorization"]);
-        
-        //In LoggedOut component we are setting  here
-        //If status code is 200 then  setLoggedIn  is  true
-        //Means now The user is successfully loggedIn
-        //and When User is successfully loggedIn then  after  rerender this
-        //component is automatically not shownby ternary operator defined in
-        //Header component which is also a parent of this component.
-        //setLoggedIn(true);// previous code using using useState()
-        const  userData = {
-          token : response.headers["authorization"],
-          userId : response.headers["userid"],
-          avatar : "My-Avatar" 
-        }
-        dispatch({type : "login", data:userData, value : "You have successfully LoggedIn!"});
+        const userData = {
+          token: response.headers["authorization"],
+          firstName: response.data.firstName ,
+          lastName : response.data.lastName,
+          userId: response.data.userId,
+          avatar: "My-Avatar",
+        };
+        appDispatch({
+          type: "login",
+          data: userData,
+          flashMeassage: "You have successfully LoggedIn!",
+        });
       }
-     
     } catch (ex) {
       console.log("There is a problem, Something went wrong! " + ex);
     }

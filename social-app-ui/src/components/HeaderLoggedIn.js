@@ -1,37 +1,36 @@
-import axios from 'axios';
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom';
 import DispatchContext from '../DispatchContext';
+import StateContext from '../StateContext';
 
 export default function HeaderLoggedIn(props) {
 
-  const {dispatch} = useContext(DispatchContext);
+  const appDispatch = useContext(DispatchContext);
+  const appState  = useContext(StateContext); 
 
-  //here we are setting setLoggedIn function to false
-  //so that we can see our LoggedOut component again
-  //because it is the logic implemented by ternary operator
-  //defined in this parent component Header.js
   function handleLogout(){
-    //setLoggedIn(false);//previous code using useState()
-    dispatch({type : "logout", value : "You have successfully LoggedOut!"});
-    //localStorage.removeItem('userId');
-    //localStorage.removeItem('Authorization');
-    //localStorage.removeItem('avatar');
-    //removing axios Authorization header for further request
-    //axios.defaults.headers.common["Authorization"] = '';
+    appDispatch({type : "logout", flashMeassage : "You have successfully LoggedOut!"});
   }
+
+  function handleSearchIcon(e){
+    e.preventDefault();
+    appDispatch({type : "openSearch"})
+  }
+
     return (
         <div className="flex-row my-3 my-md-0">
-          <a href="#" className="text-white mr-2 header-search-icon">
+          <Link onClick={handleSearchIcon} to="#" className="text-white mr-2 header-search-icon">
             <i className="fas fa-search"></i>
-          </a>
+          </Link>
           <span className="mr-2 header-chat-icon text-white">
             <i className="fas fa-comment"></i>
             <span className="chat-count-badge text-white"> </span>
           </span>
-          <a href="#" className="mr-2">
+          <Link to={`/profile/${appState.user.userId}`} className="mr-2">
+            <span className="text-white">Hello! {appState.user.firstName}</span>{" "}
             <img className="small-header-avatar" src="https://gravatar.com/avatar/b9408a09298632b5151200f3449434ef?s=128" />
-          </a>
+          </Link>
           <Link to="/posts" className="btn btn-sm btn-success mr-2">
             Create Post
           </Link>

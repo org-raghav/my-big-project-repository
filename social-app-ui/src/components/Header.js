@@ -5,7 +5,7 @@ import HeaderLoggedOut from "./HeaderLoggedOut";
 
 function Header(props) {
 
-  const {state} = useContext(StateContext);
+  const appState = useContext(StateContext);
 
   return (
     <header className="header-bar bg-primary mb-3">
@@ -15,7 +15,7 @@ function Header(props) {
             Our Social Blogs
           </a>
         </h4>
-        {state.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
+        {appState.loggedIn ? <HeaderLoggedIn /> : <HeaderLoggedOut />}
       </div>
     </header>
   );

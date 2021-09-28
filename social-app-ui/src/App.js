@@ -15,8 +15,8 @@ import Terms from "./components/Terms";
 import ViewSinglePost from "./components/ViewSinglePost";
 import DispatchContext from "./DispatchContext";
 import StateContext from "./StateContext";
-
-axios.defaults.baseURL = "http://localhost:8080";
+import Profile from "./components/Profile";
+import Search from "./components/Search";
 
 function App() {
   const initialState = {
@@ -24,85 +24,89 @@ function App() {
     flashMessages: [],
     user: {
       token: localStorage.getItem("Authorization"),
+      firstName: localStorage.getItem("firstName"),
+      lastName: localStorage.getItem("lastName"),
       userId: localStorage.getItem("userId"),
       avatar: localStorage.getItem("avatar"),
     },
+    isSearchOpen : false
   };
 
   // const[state, dispatch] = useReducer(ourReducer, initialState);
 
-  const [state, dispatch] = useImmerReducer(ourReducer, initialState);
+  const [appState, appDispatch] = useImmerReducer(ourReducer, initialState);
 
-  //ourReducer(arg1, arg2) takes two args
-  //arg1 is previous value of our state(means last updated value)
-  //meaning that we can able to take decision of what current status we want
-  //on behalf of our  previous state.
-  /* function ourReducer(state, action){
-    switch(action.type){
-      case "login":
-        console.log("i am invoked!");
-        return {loggedIn : true, flashMessages : state.flashMessages.concat(action.value)};
-      case "logout":
-        return {loggedIn : false, flashMessages : state.flashMessages.concat(action.value)};
-      case "flashMessage":
-        return {loggedIn : state.loggedIn, flashMessages : state.flashMessages.concat(action.value)};
-      default :
-        return;
-    }
-  } */
-
-  // Immer draft variable is able to access values of state
-  // draft is a copy of actual state so we can modify it directly.
+  //Very important settings of axios
+  //axios.defaults.headers.common["Authorization"] = appState.user.token;
+  axios.defaults.baseURL = "http://localhost:8080";
+  axios.defaults.headers.common = {
+    "Content-Type": "application/json",
+    "Authorization": appState.user.token
+  }
 
   function ourReducer(draft, action) {
     switch (action.type) {
       case "login":
-        draft.loggedIn = true;
-        draft.flashMessages.push(action.value); //we can directly modify draft
+        draft.loggedIn = true; //draft means state
+        draft.flashMessages.push(action.flashMeassage); //we can directly modify draft
         draft.user = action.data;
-        return; //break
+        return; //or break;
       case "logout":
         draft.loggedIn = false;
-        draft.flashMessages.push(action.value);
-        return; //break
+        draft.flashMessages.push(action.flashMeassage);
+        return; //or break;
       case "flashMessage":
         draft.flashMessages.push(action.value);
-        return; //break
+        return; //or break;
+      case "openSearch":
+        draft.isSearchOpen = true;
+        return;
+      case "closeSearch":
+        draft.isSearchOpen = false;
+        return;
       default:
-        return; //break
+        return; //or break;
     }
   }
 
   useEffect(() => {
-    if (state.loggedIn) {
-      localStorage.setItem("userId", state.user.userId);
-      localStorage.setItem("Authorization", state.user.token);
-      localStorage.setItem("avatar", state.user.avatar);
-      axios.defaults.headers.common["Authorization"] = state.user.token;
+    if (appState.loggedIn) {
+      localStorage.setItem("userId", appState.user.userId);
+      localStorage.setItem("firstName", appState.user.firstName);
+      localStorage.setItem("lastName", appState.user.lastName);
+      localStorage.setItem("Authorization", appState.user.token);
+      localStorage.setItem("avatar", appState.user.avatar);
+      axios.defaults.headers.common["Authorization"] = appState.user.token;
     } else {
       localStorage.removeItem("userId");
+      localStorage.removeItem("firstName");
+      localStorage.removeItem("lastName");
       localStorage.removeItem("Authorization");
       localStorage.removeItem("avatar");
-      axios.defaults.headers.common["Authorization"] = '';
+      axios.defaults.headers.common["Authorization"] = "";
     }
-  }, [state.loggedIn]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appState.loggedIn]);
 
   //Always remember Route tag works in order
   return (
-    <StateContext.Provider value={{ state }}>
-      <DispatchContext.Provider value={{ dispatch }}>
+    <StateContext.Provider value={appState}>
+      <DispatchContext.Provider value={appDispatch}>
         <BrowserRouter>
-          <FlashMessage messages={state.flashMessages} />
+          <FlashMessage messages={appState.flashMessages} />
           <Header />
           <Switch>
             <Route path="/" exact>
-              {state.loggedIn ? <Home /> : <HomeGuest />}
+              {appState.loggedIn ? <Home /> : <HomeGuest />}
             </Route>
             <Route path="/posts/:postId">
               <ViewSinglePost />
             </Route>
             <Route path="/posts">
               <CreatePost />
+            </Route>
+            <Route path="/profile/:profileId">
+              <Profile />
             </Route>
             <Route path="/about-us">
               <About />
@@ -111,6 +115,7 @@ function App() {
               <Terms />
             </Route>
           </Switch>
+          {appState.isSearchOpen ? <Search />  : ''}
           <Footer />
         </BrowserRouter>
       </DispatchContext.Provider>

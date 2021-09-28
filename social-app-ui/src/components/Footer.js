@@ -9,11 +9,11 @@ function Footer() {
                         Home
                     </Link>{" "}
                     |{" "}
-                    <Link className="mx-1" to="/about-us">
+                    <Link to="/about-us" className="mx-1">
                         About Us
                     </Link>{" "}
                     |{" "}
-                    <Link className="mx-1" to="/terms">
+                    <Link to="/terms" className="mx-1">
                         Terms
                     </Link>
                 </p>
@@ -22,7 +22,7 @@ function Footer() {
                     <Link to="/" className="text-muted">
                         ComplexApp
                     </Link>
-                    . All rights reserved.
+                     All rights reserved.
                 </p>
             </footer>
     );

@@ -6,16 +6,14 @@ import DispatchContext from "../DispatchContext";
 import Page from "./Page";
 
 function CreatePost(props) {
-
-  const {dispatch} = useContext(DispatchContext);
+  const appDispatch  = useContext(DispatchContext);
 
   const [title, setTitle] = useState();
   const [body, setBody] = useState();
 
-  //useContext(arg) as we wrap our App in ApplicationContext 
-  //so that we are using here 
+  //useContext(arg) as we wrap our App in ApplicationContext
+  //so that we are using here
   //const {addFlashMessage} = useContext(ApplicationContext);
-
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -28,10 +26,12 @@ function CreatePost(props) {
         console.log(response.data.body);
         //Redirect to new post(blog) url(Which is created by this post request)
         //("Congrats! you are successfully created an amazing post!");
-        dispatch({type : "flashMessage", value : "Congrats ! you have created an amazing post."})
+        appDispatch({
+          type: "flashMessage",
+          value: "Congrats ! you have created an amazing post.",
+        });
         props.history.push(`/posts/${response.data.postId}`);
-      }else
-       console.log("no data available to preview !")
+      } else console.log("no data available to preview !");
     } catch (ex) {
       console.log("An Exception occured during create Post request");
     }

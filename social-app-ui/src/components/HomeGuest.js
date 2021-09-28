@@ -11,7 +11,6 @@ function HomeGuest() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    //alert("handle submit");
     try {
       await axios.post("/users/sign-up", {
        firstName, lastName, email, password
@@ -95,7 +94,7 @@ function HomeGuest() {
               type="submit"
               className="py-3 mt-4 btn btn-lg btn-success btn-block"
             >
-              Sign up for ComplexApp
+              Sign up 
             </button>
           </form>
         </div>
